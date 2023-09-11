@@ -1,0 +1,40 @@
+# Compiler and compiler flags
+CC = gcc
+CFLAGS = -std=c99 -Wall
+
+# Executable names
+TEST_ASSIGN_EXEC = test_assign
+STORAGE_MGR_EXEC = storage_mgr
+
+# Source files
+TEST_ASSIGN_SRC = test_assign1_1.c
+STORAGE_MGR_SRC = storage_mgr.c
+
+# Object files
+TEST_ASSIGN_OBJ = $(TEST_ASSIGN_SRC:.c=.o)
+STORAGE_MGR_OBJ = $(STORAGE_MGR_SRC:.c=.o)
+
+# Targets
+all: $(TEST_ASSIGN_EXEC) $(STORAGE_MGR_EXEC)
+
+# Compile test_assign program
+$(TEST_ASSIGN_EXEC): $(TEST_ASSIGN_OBJ) $(STORAGE_MGR_OBJ)
+	$(CC) $(CFLAGS) -o $(TEST_ASSIGN_EXEC) $(TEST_ASSIGN_OBJ) $(STORAGE_MGR_OBJ) -lm
+
+# Compile storage_mgr library
+$(STORAGE_MGR_EXEC): $(STORAGE_MGR_OBJ)
+	$(CC) $(CFLAGS) -o $(STORAGE_MGR_EXEC) $(STORAGE_MGR_OBJ) -lm
+
+# Compile source files
+%.o: %.c
+	$(CC) $(CFLAGS) -c $<
+
+# Clean generated files
+clean:
+	rm -f $(TEST_ASSIGN_EXEC) $(STORAGE_MGR_EXEC) $(TEST_ASSIGN_OBJ) $(STORAGE_MGR_OBJ)
+
+# Phony target to run the test_assign program
+run_test: $(TEST_ASSIGN_EXEC)
+	./$(TEST_ASSIGN_EXEC)
+
+.PHONY: all clean run_test
